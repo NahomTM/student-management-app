@@ -12,14 +12,36 @@ const loginController = async (req, res) => {
     const password = body.password;
     const role = body.role;
     try {
-        const user = await role.findOne({
+        const user = null;
+
+        if(role == "Admin"){
+            user = await Admin.findOne({
             where:{
             username: name,
             password: password
-            }
+            }})
         }
-        );
-
+        if(role == "Manager"){
+            user = await Manager.findOne({
+            where:{
+            username: name,
+            password: password
+            }})
+        }
+        if(role == "Accountant"){
+            user = await Accountant.findOne({
+            where:{
+            username: name,
+            password: password
+            }})
+        }
+        if(role == "Instructor"){
+            user = await Instructor.findOne({
+            where:{
+            username: name,
+            password: password
+            }})
+        }
         if(!user){
             res.json({success: false, msg: "User doesn't exist"});
         }
@@ -69,6 +91,15 @@ const forgotPassword = async(req, res) =>{
         if(role == "Admin"){
             user = await Admin.findOne({where: {email}});
         }
+        if(role == "Manager"){
+            user = await Manager.findOne({where: {email}});
+        }
+        if(role == "Accountant"){
+            user = await Accountant.findOne({where: {email}});
+        }
+        if(role == "Instructor"){
+            user = await Instructor.findOne({where: {email}});
+        }
         
         if(!user){
             res.json({msg: "User doesn't exist"})
@@ -77,8 +108,9 @@ const forgotPassword = async(req, res) =>{
         const token = generateToken();
 
         await PasswordReset.create({
-            userId: user.id,
+            // userId: user.id,
             role: role,
+            email: email,
             token: token
         })
 
@@ -94,6 +126,7 @@ const resetPassword = async (req, res) => {
     const {newPassword} = req.body;
     
     try{
+        const user = null;
         const resetRow = await PasswordReset.findOne({ where: { token }});
         if(!resetRow){
             res.json({msg: "Invalid token"});
@@ -106,7 +139,20 @@ const resetPassword = async (req, res) => {
             res.json({msg: "Token has expired"});
         }
 
-        const user = await Admin.findByPk(resetRow.userId);
+        const email = resetRow.email;
+        const userRole = resetRow.role;
+        if(userRole == "Admin"){
+            user = await Admin.findOne({where: {email}});
+        }
+        if(userRole == "Manager"){
+            user = await Manager.findOne({where: {email}});
+        }
+        if(userRole == "Accountant"){
+            user = await Accountant.findOne({where: {email}});
+        }
+        if(userRole == "Instructor"){
+            user = await Instructor.findOne({where: {email}});
+        }
         if (!user) {
             res.json({msg: "User not found"});
         }

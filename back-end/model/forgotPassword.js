@@ -11,13 +11,16 @@ const PasswordReset = sequelize.define('paswordReset', {
 
     },
     
-    userId:{
-        type: DataTypes.INTEGER,
-        allowNull:false,
-        references:{
-            model: Admin,
-            key: 'id'
-        }
+    // userId:{
+    //     type: DataTypes.INTEGER,
+    //     allowNull:false,
+    //     references:{
+    //         model: Admin,
+    //         key: 'id'
+    //     }
+    // },
+    email: {
+        type: DataTypes.STRING
     },
     role: {
         type: DataTypes.STRING,
@@ -39,8 +42,8 @@ const PasswordReset = sequelize.define('paswordReset', {
 }
 );
 
-Admin.hasMany(PasswordReset, {foreignKey: 'userId'});
-PasswordReset.belongsTo(Admin, {foreignKey: 'userId'});
+// Admin.hasMany(PasswordReset, {foreignKey: 'userId'});
+// PasswordReset.belongsTo(Admin, {foreignKey: 'userId'});
 
 sequelize.sync().then(() => {
     console.log('Tables created successfully!');
