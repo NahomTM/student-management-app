@@ -2,7 +2,7 @@ const Admin = require('../model/admin');
 
 async function checkIfTableIsEmpty() {
     try {
-        const rowCount = await YourModel.count();
+        const rowCount = await Admin.count();
         if (rowCount === 0) {
             console.log('Table is empty');
             await Admin.create({
